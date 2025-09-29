@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+## Steps Using useState (React Demo)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An educational React example showing how to manage UI state with `useState`. It demonstrates a simple multi-step UI with a "Previous" and "Next" flow and a toggle to show/hide the steps.
 
-## Available Scripts
+### How it works
 
-In the project directory, you can run:
+- **State**: The components track `step` (1 → 3) and `isOpen` (show/hide panel) using `useState`.
+- **Next button re-render**: Clicking "Next" calls `setStep(s => s + 1)` while `step < 3`. Any state update triggers React to re-render the parts of the UI that read `step` (the active number indicators and the step message). When `step` is already 3, clicking "Next" does nothing and there is no re-render because state doesn't change.
+- **Previous button**: Decreases `step` while `step > 1` and re-renders accordingly.
+- **Close (×) button**: Toggles `isOpen`, conditionally rendering the steps panel.
 
-### `npm start`
+Key spots in code:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- `src/App-v1.js`: Inline buttons and logic in a single component.
+- `src/App.js`: A variant that splits UI into `Steps`, `StepMessage`, and `Button` components.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Prerequisites
 
-### `npm test`
+- Node.js 18+ recommended
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Install
 
-### `npm run build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Run the app (development)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Then open `http://localhost:3000` in your browser.
 
-### `npm run eject`
+### Build for production
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+```bash
+npm run build
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Project structure
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```
+public/
+  index.html
+src/
+  App.js        # Main demo with useState for step + isOpen
+  App-v1.js     # Componentized variant (Steps, StepMessage, Button)
+  index.js      # React entry point
+  index.css     # Basic styles for steps and buttons
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### What to look for
 
-## Learn More
+- How `setStep` and `setIsOpen` cause re-renders by changing state.
+- Conditional rendering with `{isOpen && (...)}`.
+- Deriving UI from state: active step indicators and `messages[step - 1]`.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+### Children props
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- `StepMessage` accepts `children` and renders whatever is passed between its tags.
 
-### Code Splitting
+Usage in `src/App.js`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```13:20:src/App.js
+      <StepMessage step={1}>
+        <p>Pass in content</p>
+        <p>✌️</p>
+      </StepMessage>
+```
 
-### Analyzing the Bundle Size
+Definition in `src/App.js`:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+```90:96:src/App.js
+function StepMessage({ step, children }) {
+  return (
+    <div className="message">
+      <h3>Step {step}</h3>
+      {children}
+    </div>
+  );
+}
+```
 
-### Making a Progressive Web App
+### Common tweaks
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- Change the number of steps by adjusting the `messages` array and the max/min checks around `step`.
+- Style updates in `src/index.css`.
 
-### Advanced Configuration
+### License
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+MIT
